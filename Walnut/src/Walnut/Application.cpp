@@ -171,8 +171,8 @@ static void SetupVulkan(const char** extensions, uint32_t extensions_count)
 
 	// Create Logical Device (with 1 queue)
 	{
-		int device_extension_count = 1;
-		const char* device_extensions[] = { "VK_KHR_swapchain" };
+		int device_extension_count = 3;
+		const char* device_extensions[] = { "VK_KHR_swapchain", "VK_KHR_external_memory", "VK_KHR_external_memory_win32" };
 		const float queue_priority[] = { 1.0f };
 		VkDeviceQueueCreateInfo queue_info[1] = {};
 		queue_info[0].sType = VK_STRUCTURE_TYPE_DEVICE_QUEUE_CREATE_INFO;
@@ -706,6 +706,16 @@ namespace Walnut {
 	VkDevice Application::GetDevice()
 	{
 		return g_Device;
+	}
+
+	VkQueue Application::GetQueue()
+	{
+		return g_Queue;
+	}
+
+	uint32_t Application::GetQueueFamily()
+	{
+		return g_QueueFamily;
 	}
 
 	VkCommandBuffer Application::GetCommandBuffer(bool begin)
