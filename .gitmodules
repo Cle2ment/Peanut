@@ -12,4 +12,3 @@
 [submodule "vendor/GLFW"]
 	path = vendor/GLFW
 	url = https://github.com/glfw/glfw
-	branch = 3.4
