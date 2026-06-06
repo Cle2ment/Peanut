@@ -8,7 +8,7 @@
 #define STB_IMAGE_IMPLEMENTATION
 #include "stb_image.h"
 
-namespace Walnut {
+namespace Peanut {
 
 	namespace Utils {
 
@@ -35,7 +35,7 @@ namespace Walnut {
 			return 0;
 		}
 		
-		static VkFormat WalnutFormatToVulkanFormat(ImageFormat format)
+		static VkFormat PeanutFormatToVulkanFormat(ImageFormat format)
 		{
 			switch (format)
 			{
@@ -91,7 +91,7 @@ namespace Walnut {
 
 		VkResult err;
 		
-		VkFormat vulkanFormat = Utils::WalnutFormatToVulkanFormat(m_Format);
+		VkFormat vulkanFormat = Utils::PeanutFormatToVulkanFormat(m_Format);
 
 		// Create the Image
 		{

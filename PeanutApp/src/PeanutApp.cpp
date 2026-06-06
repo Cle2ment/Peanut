@@ -1,9 +1,9 @@
-#include "Walnut/Application.h"
-#include "Walnut/EntryPoint.h"
+#include "Peanut/Application.h"
+#include "Peanut/EntryPoint.h"
 
-#include "Walnut/Image.h"
+#include "Peanut/Image.h"
 
-class ExampleLayer : public Walnut::Layer
+class ExampleLayer : public Peanut::Layer
 {
 public:
 	virtual void OnUIRender() override
@@ -16,12 +16,12 @@ public:
 	}
 };
 
-Walnut::Application* Walnut::CreateApplication(int argc, char** argv)
+Peanut::Application* Peanut::CreateApplication(int argc, char** argv)
 {
-	Walnut::ApplicationSpecification spec;
-	spec.Name = "Walnut Example";
+	Peanut::ApplicationSpecification spec;
+	spec.Name = "Peanut Example";
 
-	Walnut::Application* app = new Walnut::Application(spec);
+	Peanut::Application* app = new Peanut::Application(spec);
 	app->PushLayer<ExampleLayer>();
 	app->SetMenubarCallback([app]()
 	{

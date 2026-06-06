@@ -4,7 +4,7 @@
 #include <string>
 #include <chrono>
 
-namespace Walnut {
+namespace Peanut {
 
 	class Timer
 	{

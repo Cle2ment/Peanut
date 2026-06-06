@@ -1,10 +1,10 @@
 -- premake5.lua
-workspace "WalnutApp"
+workspace "PeanutApp"
    architecture "x64"
    configurations { "Debug", "Release", "Dist" }
-   startproject "WalnutApp"
+   startproject "PeanutApp"
 
 outputdir = "%{cfg.buildcfg}-%{cfg.system}-%{cfg.architecture}"
 
-include "WalnutExternal.lua"
-include "WalnutApp"
+include "PeanutExternal.lua"
+include "PeanutApp"

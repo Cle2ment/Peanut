@@ -1,5 +1,5 @@
-project "WalnutApp"
-   kind "ConsoleApp"
+project "Peanut"
+   kind "StaticLib"
    language "C++"
    cppdialect "C++17"
    targetdir "bin/%{cfg.buildcfg}"
@@ -9,41 +9,44 @@ project "WalnutApp"
 
    includedirs
    {
+      "src",
+
       "../vendor/imgui",
       "../vendor/glfw/include",
-
-      "../Walnut/src",
+      "../vendor/stb_image",
 
       "%{IncludeDir.VulkanSDK}",
       "%{IncludeDir.glm}",
    }
 
-    links
-    {
-        "Walnut"
-    }
+   links
+   {
+       "ImGui",
+       "GLFW",
 
-   targetdir ("../bin/" .. outputdir .. "/%{prj.name}")
+       "%{Library.Vulkan}",
+   }
+
+   targetdir ("bin/" .. outputdir .. "/%{prj.name}")
    objdir ("../bin-int/" .. outputdir .. "/%{prj.name}")
 
    filter "system:windows"
       systemversion "latest"
-      defines { "WL_PLATFORM_WINDOWS" }
+      defines { "PN_PLATFORM_WINDOWS" }
 
    filter "configurations:Debug"
-      defines { "WL_DEBUG" }
+      defines { "PN_DEBUG" }
       runtime "Debug"
       symbols "On"
 
    filter "configurations:Release"
-      defines { "WL_RELEASE" }
+      defines { "PN_RELEASE" }
       runtime "Release"
       optimize "On"
       symbols "On"
 
    filter "configurations:Dist"
-      kind "WindowedApp"
-      defines { "WL_DIST" }
+      defines { "PN_DIST" }
       runtime "Release"
       optimize "On"
       symbols "Off"

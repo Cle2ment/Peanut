@@ -1,4 +1,4 @@
--- WalnutExternal.lua
+-- PeanutExternal.lua
 
 VULKAN_SDK = os.getenv("VULKAN_SDK")
 
@@ -18,5 +18,5 @@ group "Dependencies"
 group ""
 
 group "Core"
-include "Walnut"
+include "Peanut"
 group ""

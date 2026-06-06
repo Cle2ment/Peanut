@@ -1,6 +1,6 @@
 #pragma once
 
-namespace Walnut {
+namespace Peanut {
 
 	class Layer
 	{
