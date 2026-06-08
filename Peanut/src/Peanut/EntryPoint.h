@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #ifdef PN_PLATFORM_WINDOWS
 
 extern Peanut::Application* Peanut::CreateApplication(int argc, char** argv);
@@ -11,9 +13,8 @@ namespace Peanut {
 	{
 		while (g_ApplicationRunning)
 		{
-			Peanut::Application* app = Peanut::CreateApplication(argc, argv);
+			std::unique_ptr<Peanut::Application> app{ Peanut::CreateApplication(argc, argv) };
 			app->Run();
-			delete app;
 		}
 
 		return 0;
