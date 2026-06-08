@@ -266,6 +266,7 @@ static void CleanupVulkan()
 
 static void CleanupVulkanWindow()
 {
+	vkDestroySurfaceKHR(g_Instance, g_MainWindowData.Surface, g_Allocator);
 	ImGui_ImplVulkanH_DestroyWindow(g_Instance, g_Device, &g_MainWindowData, g_Allocator);
 }
 
