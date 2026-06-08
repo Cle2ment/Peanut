@@ -26,7 +26,7 @@ namespace Peanut {
 
 		static float Float()
 		{
-			return (float)s_Distribution(s_RandomEngine) / (float)std::numeric_limits<uint32_t>::max();
+			return static_cast<float>(s_Distribution(s_RandomEngine)) / static_cast<float>(std::numeric_limits<uint32_t>::max());
 		}
 
 		static glm::vec3 Vec3()
