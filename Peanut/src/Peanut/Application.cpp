@@ -154,15 +154,14 @@ static void SetupVulkan(const char** extensions, uint32_t extensions_count)
 	{
 		uint32_t count;
 		vkGetPhysicalDeviceQueueFamilyProperties(g_PhysicalDevice, &count, NULL);
-		VkQueueFamilyProperties* queues = (VkQueueFamilyProperties*)malloc(sizeof(VkQueueFamilyProperties) * count);
-		vkGetPhysicalDeviceQueueFamilyProperties(g_PhysicalDevice, &count, queues);
+		std::vector<VkQueueFamilyProperties> queues(count);
+		vkGetPhysicalDeviceQueueFamilyProperties(g_PhysicalDevice, &count, queues.data());
 		for (uint32_t i = 0; i < count; i++)
 			if (queues[i].queueFlags & VK_QUEUE_GRAPHICS_BIT)
 			{
 				g_QueueFamily = i;
 				break;
 			}
-		free(queues);
 		IM_ASSERT(g_QueueFamily != (uint32_t)-1);
 	}
 
