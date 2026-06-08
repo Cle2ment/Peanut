@@ -128,8 +128,8 @@ static void SetupVulkan(const char** extensions, uint32_t extensions_count)
 		check_vk_result(err);
 		IM_ASSERT(gpu_count > 0);
 
-		VkPhysicalDevice* gpus = (VkPhysicalDevice*)malloc(sizeof(VkPhysicalDevice) * gpu_count);
-		err = vkEnumeratePhysicalDevices(g_Instance, &gpu_count, gpus);
+		std::vector<VkPhysicalDevice> gpus(gpu_count);
+		err = vkEnumeratePhysicalDevices(g_Instance, &gpu_count, gpus.data());
 		check_vk_result(err);
 
 		// If a number >1 of GPUs got reported, find discrete GPU if present, or use first one available. This covers
@@ -148,7 +148,6 @@ static void SetupVulkan(const char** extensions, uint32_t extensions_count)
 		}
 
 		g_PhysicalDevice = gpus[use_gpu];
-		free(gpus);
 	}
 
 	// Select graphics queue family
