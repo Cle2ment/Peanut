@@ -42,7 +42,7 @@ namespace Peanut {
 				case ImageFormat::RGBA:    return VK_FORMAT_R8G8B8A8_UNORM;
 				case ImageFormat::RGBA32F: return VK_FORMAT_R32G32B32A32_SFLOAT;
 			}
-			return (VkFormat)0;
+			return static_cast<VkFormat>(0);
 		}
 
 	}
@@ -55,7 +55,7 @@ namespace Peanut {
 
 		if (stbi_is_hdr(m_Filepath.c_str()))
 		{
-			data = (uint8_t*)stbi_loadf(m_Filepath.c_str(), &width, &height, &channels, 4);
+			data = reinterpret_cast<uint8_t*>(stbi_loadf(m_Filepath.c_str(), &width, &height, &channels, 4));
 			m_Format = ImageFormat::RGBA32F;
 		}
 		else
@@ -155,7 +155,7 @@ namespace Peanut {
 		}
 
 		// Create the Descriptor Set:
-		m_DescriptorSet = (VkDescriptorSet)ImGui_ImplVulkan_AddTexture(m_Sampler, m_ImageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL);
+		m_DescriptorSet = reinterpret_cast<VkDescriptorSet>(ImGui_ImplVulkan_AddTexture(m_Sampler, m_ImageView, VK_IMAGE_LAYOUT_SHADER_READ_ONLY_OPTIMAL));
 	}
 
 	void Image::Release()
@@ -220,7 +220,7 @@ namespace Peanut {
 		// Upload to Buffer
 		{
 			char* map = NULL;
-			err = vkMapMemory(device, m_StagingBufferMemory, 0, m_AlignedSize, 0, (void**)(&map));
+			err = vkMapMemory(device, m_StagingBufferMemory, 0, m_AlignedSize, 0, reinterpret_cast<void**>(&map));
 			check_vk_result(err);
 			memcpy(map, data, upload_size);
 			VkMappedMemoryRange range[1] = {};

@@ -37,7 +37,7 @@ static VkAllocationCallbacks* g_Allocator = NULL;
 static VkInstance               g_Instance = VK_NULL_HANDLE;
 static VkPhysicalDevice         g_PhysicalDevice = VK_NULL_HANDLE;
 static VkDevice                 g_Device = VK_NULL_HANDLE;
-static uint32_t                 g_QueueFamily = (uint32_t)-1;
+static uint32_t                 g_QueueFamily = static_cast<uint32_t>(-1);
 static VkQueue                  g_Queue = VK_NULL_HANDLE;
 static VkDebugReportCallbackEXT g_DebugReport = VK_NULL_HANDLE;
 static VkPipelineCache          g_PipelineCache = VK_NULL_HANDLE;
@@ -69,7 +69,7 @@ void check_vk_result(VkResult err)
 #ifdef IMGUI_VULKAN_DEBUG_REPORT
 static VKAPI_ATTR VkBool32 VKAPI_CALL debug_report(VkDebugReportFlagsEXT flags, VkDebugReportObjectTypeEXT objectType, uint64_t object, size_t location, int32_t messageCode, const char* pLayerPrefix, const char* pMessage, void* pUserData)
 {
-	(void)flags; (void)object; (void)location; (void)messageCode; (void)pUserData; (void)pLayerPrefix; // Unused arguments
+	static_cast<void>(flags); static_cast<void>(object); static_cast<void>(location); static_cast<void>(messageCode); static_cast<void>(pUserData); static_cast<void>(pLayerPrefix); // Unused arguments
 	fprintf(stderr, "[vulkan] Debug report from ObjectType: %i\nMessage: %s\n\n", objectType, pMessage);
 	return VK_FALSE;
 }
@@ -102,7 +102,7 @@ static void SetupVulkan(const char** extensions, uint32_t extensions_count)
 		check_vk_result(err);
 
 		// Get the function pointer (required for any extensions)
-		auto vkCreateDebugReportCallbackEXT = (PFN_vkCreateDebugReportCallbackEXT)vkGetInstanceProcAddr(g_Instance, "vkCreateDebugReportCallbackEXT");
+		auto vkCreateDebugReportCallbackEXT = reinterpret_cast<PFN_vkCreateDebugReportCallbackEXT>(vkGetInstanceProcAddr(g_Instance, "vkCreateDebugReportCallbackEXT"));
 		IM_ASSERT(vkCreateDebugReportCallbackEXT != NULL);
 
 		// Setup the debug report callback
@@ -136,7 +136,7 @@ static void SetupVulkan(const char** extensions, uint32_t extensions_count)
 		// most common cases (multi-gpu/integrated+dedicated graphics). Handling more complicated setups (multiple
 		// dedicated GPUs) is out of scope of this sample.
 		int use_gpu = 0;
-		for (int i = 0; i < (int)gpu_count; i++)
+		for (int i = 0; i < static_cast<int>(gpu_count); i++)
 		{
 			VkPhysicalDeviceProperties properties;
 			vkGetPhysicalDeviceProperties(gpus[i], &properties);
@@ -162,7 +162,7 @@ static void SetupVulkan(const char** extensions, uint32_t extensions_count)
 				g_QueueFamily = i;
 				break;
 			}
-		IM_ASSERT(g_QueueFamily != (uint32_t)-1);
+		IM_ASSERT(g_QueueFamily != static_cast<uint32_t>(-1));
 	}
 
 	// Create Logical Device (with 1 queue)
@@ -206,7 +206,7 @@ static void SetupVulkan(const char** extensions, uint32_t extensions_count)
 		pool_info.sType = VK_STRUCTURE_TYPE_DESCRIPTOR_POOL_CREATE_INFO;
 		pool_info.flags = VK_DESCRIPTOR_POOL_CREATE_FREE_DESCRIPTOR_SET_BIT;
 		pool_info.maxSets = 1000 * IM_ARRAYSIZE(pool_sizes);
-		pool_info.poolSizeCount = (uint32_t)IM_ARRAYSIZE(pool_sizes);
+		pool_info.poolSizeCount = static_cast<uint32_t>(IM_ARRAYSIZE(pool_sizes));
 		pool_info.pPoolSizes = pool_sizes;
 		err = vkCreateDescriptorPool(g_Device, &pool_info, g_Allocator, &g_DescriptorPool);
 		check_vk_result(err);
@@ -231,7 +231,7 @@ static void SetupVulkanWindow(ImGui_ImplVulkanH_Window* wd, VkSurfaceKHR surface
 	// Select Surface Format
 	const VkFormat requestSurfaceImageFormat[] = { VK_FORMAT_B8G8R8A8_UNORM, VK_FORMAT_R8G8B8A8_UNORM, VK_FORMAT_B8G8R8_UNORM, VK_FORMAT_R8G8B8_UNORM };
 	const VkColorSpaceKHR requestSurfaceColorSpace = VK_COLORSPACE_SRGB_NONLINEAR_KHR;
-	wd->SurfaceFormat = ImGui_ImplVulkanH_SelectSurfaceFormat(g_PhysicalDevice, wd->Surface, requestSurfaceImageFormat, (size_t)IM_ARRAYSIZE(requestSurfaceImageFormat), requestSurfaceColorSpace);
+	wd->SurfaceFormat = ImGui_ImplVulkanH_SelectSurfaceFormat(g_PhysicalDevice, wd->Surface, requestSurfaceImageFormat, static_cast<size_t>(IM_ARRAYSIZE(requestSurfaceImageFormat)), requestSurfaceColorSpace);
 
 	// Select Present Mode
 #ifdef IMGUI_UNLIMITED_FRAME_RATE
@@ -253,7 +253,7 @@ static void CleanupVulkan()
 
 #ifdef IMGUI_VULKAN_DEBUG_REPORT
 	// Remove the debug report callback
-	auto vkDestroyDebugReportCallbackEXT = (PFN_vkDestroyDebugReportCallbackEXT)vkGetInstanceProcAddr(g_Instance, "vkDestroyDebugReportCallbackEXT");
+	auto vkDestroyDebugReportCallbackEXT = reinterpret_cast<PFN_vkDestroyDebugReportCallbackEXT>(vkGetInstanceProcAddr(g_Instance, "vkDestroyDebugReportCallbackEXT"));
 	vkDestroyDebugReportCallbackEXT(g_Instance, g_DebugReport, g_Allocator);
 #endif // IMGUI_VULKAN_DEBUG_REPORT
 
@@ -304,7 +304,7 @@ static void FrameRender(ImGui_ImplVulkanH_Window* wd, ImDrawData* draw_data)
 		auto& allocatedCommandBuffers = s_AllocatedCommandBuffers[wd->FrameIndex];
 		if (allocatedCommandBuffers.size() > 0)
 		{
-			vkFreeCommandBuffers(g_Device, fd->CommandPool, (uint32_t)allocatedCommandBuffers.size(), allocatedCommandBuffers.data());
+			vkFreeCommandBuffers(g_Device, fd->CommandPool, static_cast<uint32_t>(allocatedCommandBuffers.size()), allocatedCommandBuffers.data());
 			allocatedCommandBuffers.clear();
 		}
 
@@ -441,7 +441,7 @@ namespace Peanut {
 		// Setup Dear ImGui context
 		IMGUI_CHECKVERSION();
 		ImGui::CreateContext();
-		ImGuiIO& io = ImGui::GetIO(); (void)io;
+		ImGuiIO& io = ImGui::GetIO(); static_cast<void>(io);
 		io.ConfigFlags |= ImGuiConfigFlags_NavEnableKeyboard;       // Enable Keyboard Controls
 		//io.ConfigFlags |= ImGuiConfigFlags_NavEnableGamepad;      // Enable Gamepad Controls
 		io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;           // Enable Docking
@@ -482,7 +482,7 @@ namespace Peanut {
 		// Load default font BEFORE backend init (ImGui 1.91+ requires this)
 		ImFontConfig fontConfig;
 		fontConfig.FontDataOwnedByAtlas = false;
-		ImFont* robotoFont = io.Fonts->AddFontFromMemoryTTF((void*)g_RobotoRegular, sizeof(g_RobotoRegular), 20.0f, &fontConfig);
+		ImFont* robotoFont = io.Fonts->AddFontFromMemoryTTF(const_cast<void*>(static_cast<const void*>(g_RobotoRegular)), sizeof(g_RobotoRegular), 20.0f, &fontConfig);
 		io.FontDefault = robotoFont;
 
 		ImGui_ImplVulkan_Init(&init_info);
@@ -659,7 +659,7 @@ namespace Peanut {
 
 	float Application::GetTime()
 	{
-		return (float)glfwGetTime();
+		return static_cast<float>(glfwGetTime());
 	}
 
 	VkInstance Application::GetInstance()
