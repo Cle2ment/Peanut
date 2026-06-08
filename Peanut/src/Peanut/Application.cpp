@@ -8,6 +8,7 @@
 #include "backends/imgui_impl_vulkan.h"
 #include <stdio.h>          // printf, fprintf
 #include <stdlib.h>         // abort
+#include <vector>           // std::vector
 #define GLFW_INCLUDE_VULKAN
 #include <GLFW/glfw3.h>
 #include <vulkan/vulkan.h>
@@ -91,16 +92,14 @@ static void SetupVulkan(const char** extensions, uint32_t extensions_count)
 		create_info.ppEnabledLayerNames = layers;
 
 		// Enable debug report extension (we need additional storage, so we duplicate the user array to add our new extension to it)
-		const char** extensions_ext = (const char**)malloc(sizeof(const char*) * (extensions_count + 1));
-		memcpy(extensions_ext, extensions, extensions_count * sizeof(const char*));
-		extensions_ext[extensions_count] = "VK_EXT_debug_report";
-		create_info.enabledExtensionCount = extensions_count + 1;
-		create_info.ppEnabledExtensionNames = extensions_ext;
+		std::vector<const char*> extensions_ext(extensions, extensions + extensions_count);
+		extensions_ext.push_back("VK_EXT_debug_report");
+		create_info.enabledExtensionCount = static_cast<uint32_t>(extensions_ext.size());
+		create_info.ppEnabledExtensionNames = extensions_ext.data();
 
 		// Create Vulkan Instance
 		err = vkCreateInstance(&create_info, g_Allocator, &g_Instance);
 		check_vk_result(err);
-		free(extensions_ext);
 
 		// Get the function pointer (required for any extensions)
 		auto vkCreateDebugReportCallbackEXT = (PFN_vkCreateDebugReportCallbackEXT)vkGetInstanceProcAddr(g_Instance, "vkCreateDebugReportCallbackEXT");
