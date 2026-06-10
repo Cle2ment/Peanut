@@ -19,8 +19,6 @@
 // Emedded font
 #include "ImGui/Roboto-Regular.embed"
 
-extern bool g_ApplicationRunning;
-
 // [Win32] Our example includes a copy of glfw3.lib pre-compiled with VS2010 to maximize ease of testing and compatibility with old VS compilers.
 // To link with VS2010-era libraries, VS2015+ requires linking with legacy_stdio_definitions.lib, which we do using this pragma.
 // Your own project should not be affected, as you are likely to link with a newer binary of GLFW that is adequate for your version of Visual Studio.
@@ -517,7 +515,7 @@ namespace Peanut {
 		glfwDestroyWindow(m_WindowHandle);
 		glfwTerminate();
 
-		g_ApplicationRunning = false;
+		s_IsRunning = false;
 	}
 
 	void Application::Run()
@@ -566,7 +564,7 @@ namespace Peanut {
 			ImGui::NewFrame();
 
 			{
-				static ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
+				ImGuiDockNodeFlags dockspace_flags = ImGuiDockNodeFlags_None;
 
 				// We are using the ImGuiWindowFlags_NoDocking flag to make the parent window not dockable into,
 				// because it would be confusing to have two docking targets within each others.

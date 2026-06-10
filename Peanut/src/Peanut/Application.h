@@ -58,7 +58,10 @@ namespace Peanut {
 		static void FlushCommandBuffer(VkCommandBuffer commandBuffer);
 
 		static void SubmitResourceFree(std::function<void()>&& func);
+
+		static bool IsRunning() { return s_IsRunning; }
 	private:
+		static inline bool s_IsRunning = true;
 		void Init();
 		void Shutdown();
 	private:

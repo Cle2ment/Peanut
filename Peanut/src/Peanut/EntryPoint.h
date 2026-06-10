@@ -5,13 +5,12 @@
 #ifdef PN_PLATFORM_WINDOWS
 
 extern Peanut::Application* Peanut::CreateApplication(int argc, char** argv);
-bool g_ApplicationRunning = true;
 
 namespace Peanut {
 
 	int Main(int argc, char** argv)
 	{
-		while (g_ApplicationRunning)
+		while (Application::IsRunning())
 		{
 			std::unique_ptr<Peanut::Application> app{ Peanut::CreateApplication(argc, argv) };
 			app->Run();
